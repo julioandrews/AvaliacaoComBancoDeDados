@@ -1,12 +1,13 @@
 Professor = {*CPF, nome, data nasc., salário, idade}
 Avaliação = {*A_CÓD, descrição, data, horário, valor, nota final, disciplina, **professor, **P_CPF, **A_CPF}
 Aluno = {*CPF, nome, turma, semestre}
-disciplinas = {*CPF, disciplina}
+disciplinas = {*CPF, *disciplina}
 Questão = {*Q_CÓD, tipo, pergunta}
 Q_Descritiva = {*Q_CÓD, resposta esperada}
 Q_Objetiva = {*Q_CÓD, resposta certa}
-Opções = {*Q_CÓD, opcão}
+Opções = {*Q_CÓD, *opcão}
 Questões_usadas = {*A_CÓD, *Q_CÓD, valor/questão}
 * = chave primaria
 
 ** = chave estrangeira 
+
