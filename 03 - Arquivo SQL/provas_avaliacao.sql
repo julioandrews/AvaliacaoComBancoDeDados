@@ -59,7 +59,7 @@ CREATE TABLE avaliacao(
 	descricao VARCHAR(300) NOT NULL,
 	data DATE NOT NULL,
 	horario TIME NOT NULL,
-	valor INTEGER NOT NULL CHECK (valor > 0),
+	valor NUMERIC(4, 2)  NOT NULL CHECK (valor > 0),
 	p_cpf VARCHAR(11) NOT NULL,
 	CONSTRAINT "pk_ava" PRIMARY KEY(cod),
 	CONSTRAINT "fk_ava_prof" FOREIGN KEY(p_cpf)
@@ -69,7 +69,7 @@ CREATE TABLE avaliacao(
 CREATE TABLE prova_feita(
 	cod INTEGER NOT NULL,
 	cpf VARCHAR(11) NOT NULL,
-	nota_final INTEGER NOT NULL CHECK (nota_final BETWEEN 0 AND 10),
+	nota_final NUMERIC(4, 2)  NOT NULL CHECK (nota_final BETWEEN 0 AND 10),
 	CONSTRAINT "pk_prova" PRIMARY KEY(cod, cpf),
 	CONSTRAINT "fk_prova_ava" FOREIGN KEY(cod)
 	REFERENCES avaliacao(cod),
@@ -102,7 +102,7 @@ CREATE TABLE resposta_dada(
 	a_cod INTEGER NOT NULL,
 	q_cod INTEGER NOT NULL,
 	resposta VARCHAR(300) NOT NULL,
-	nota_final INTEGER NOT NULL CHECK (nota_final BETWEEN 0 AND 10),
+	nota_final NUMERIC(4, 2)  NOT NULL CHECK (nota_final BETWEEN 0 AND 10),
 	CONSTRAINT "pk_res" PRIMARY KEY (cpf, a_cod, q_cod),
 	CONSTRAINT "fk_res_aluno" FOREIGN KEY(cpf)
 	REFERENCES aluno(cpf),
@@ -111,6 +111,7 @@ CREATE TABLE resposta_dada(
 	CONSTRAINT "fk_res_ques" FOREIGN KEY(q_cod)
 	REFERENCES questao(cod)
 	
+
 
 
 
