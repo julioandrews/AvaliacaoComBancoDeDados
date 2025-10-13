@@ -19,12 +19,14 @@ CREATE TABLE aluno(
 	CONSTRAINT "pk_aluno" PRIMARY KEY (cpf)
 );
 
-CREATE TABLE disciplinas(
+CREATE TABLE disciplina(
+	cod INTEGER NOT NULL,
 	cpf VARCHAR(11) NOT NULL,
-	disciplina VARCHAR(100) NOT NULL,
-	CONSTRAINT "pk_disc" PRIMARY KEY (cpf,disciplina),
+	nome VARCHAR(100) NOT NULL,
+	descricao VARCHAR(300) NOT NULL,
+	CONSTRAINT "pk_disc" PRIMARY KEY (cod),
 	CONSTRAINT "fk_disc_aluno" FOREIGN KEY(cpf)
-	REFERENCES aluno(cpf)
+	REFERENCES professor(cpf)
 );
 
 CREATE TABLE questao(
@@ -58,17 +60,22 @@ CREATE TABLE avaliacao(
 	data DATE NOT NULL,
 	horario TIME NOT NULL,
 	valor INTEGER NOT NULL CHECK (valor > 0),
-	nota_final INTEGER NOT NULL CHECK (nota_final BETWEEN 0 AND 10),
-	disciplina VARCHAR(100),
 	p_cpf VARCHAR(11) NOT NULL,
-	a_cpf VARCHAR(11) NOT NULL,
 	CONSTRAINT "pk_ava" PRIMARY KEY(cod),
 	CONSTRAINT "fk_ava_prof" FOREIGN KEY(p_cpf)
-	REFERENCES professor(cpf),
-	CONSTRAINT "fk_ava_aluno" FOREIGN KEY(a_cpf)
-	REFERENCES aluno(cpf)
+	REFERENCES professor(cpf)
 );	
 
+CREATE TABLE prova_feita(
+	cod INTEGER NOT NULL,
+	cpf VARCHAR(11) NOT NULL,
+	nota_final INTEGER NOT NULL CHECK (nota_final BETWEEN 0 AND 10),
+	CONSTRAINT "pk_prova" PRIMARY KEY(cod, cpf),
+	CONSTRAINT "fk_prova_ava" FOREIGN KEY(cod)
+	REFERENCES avaliacao(cod),
+	CONSTRAINT "fk_prova_aluno" FOREIGN KEY(cpf)
+	REFERENCES aluno(cpf)
+);
 CREATE TABLE questoes_usadas(
 	a_cod INTEGER NOT NULL,
 	q_cod INTEGER NOT NULL,
@@ -79,6 +86,32 @@ CREATE TABLE questoes_usadas(
 	CONSTRAINT "fk_ques_usadas_ques" FOREIGN KEY(q_cod)
 	REFERENCES questao(cod)
 );
+
+CREATE TABLE aluno_cursa_disc(
+	cod INTEGER NOT NULL,
+	cpf VARCHAR(11) NOT NULL,
+	CONSTRAINT "pk_acd" FOREIGN KEY(cod, cpf),
+	CONSTRAINT "fk_acd_disc" FOREIGN KEY(cod)
+	REFERENCES disciplina(cod),
+	CONSTRAINT "fk_acd_aluno" FOREIGN KEY(cpf)
+	REFERENCES aluno(cod)
+);
+
+CREATE TABLE resposta_dada(
+	cpf VARCHAR(11) NOT NULL,
+	a_cod INTEGER NOT NULL,
+	q_cod INTEGER NOT NULL,
+	resposta VARCHAR(300) NOT NULL,
+	nota_final INTEGER NOT NULL CHECK (nota_final BETWEEN 0 AND 10),
+	CONSTRAINT "pk_res" PRIMARY KEY (cpf, a_cod, q_cod),
+	CONSTRAINT "fk_res_aluno" FOREIGN KEY(cpf)
+	REFERENCES aluno(cpf),
+	CONSTRAINT "fk_res_ava" FOREIGN KEY(a_cod)
+	REFERENCES avaliacao(cod),
+	CONSTRAINT "fk_res_ques" FOREIGN KEY(q_cod)
+	REFERENCES questao(cod)
+	
+
 
 
 
