@@ -1,5 +1,6 @@
 Professor = {*CPF, nome, data nasc., salário, idade}
-Avaliação = {*A_CÓD, descrição, data, horário, valor, nota final, disciplina, **professor, **P_CPF, **A_CPF}
+Avaliação = {*CÓD, descrição, data, horário, valor, **P_CPF}
+Prova_Feita = {*CÓD, *CPF, nota_final}
 Aluno = {*CPF, nome, turma, semestre}
 disciplina = {*CÓD, **P_CPF, Nome, Descrição}
 Questão = {*Q_CÓD, tipo, pergunta}
@@ -12,5 +13,6 @@ Resposta_Dada = {*CPF_Aluno,*COD_avaliação, *COD_questão, resposta, nota_fina
 * = chave primaria
 
 ** = chave estrangeira 
+
 
 
