@@ -1,0 +1,18 @@
+Professor = {*CPF, nome, data nasc., salário, idade}
+Avaliação = {*CÓD, descrição, data, horário, valor, **P_CPF}
+Prova_Feita = {*CÓD, *CPF, nota_final}
+Aluno = {*CPF, nome, turma, semestre}
+disciplina = {*CÓD, **P_CPF, Nome, Descrição}
+Questão = {*Q_CÓD, tipo, pergunta}
+Q_Descritiva = {*Q_CÓD, resposta esperada}
+Q_Objetiva = {*Q_CÓD, resposta certa}
+Opções = {*Q_CÓD, *opcão}
+Questões_usadas = {*A_CÓD, *Q_CÓD, valor/questão}
+Aluno_cursa_Disc = {*CÓD,*CPF}
+Resposta_Dada = {*CPF_Aluno,*COD_avaliação, *COD_questão, resposta, nota_final}
+* = chave primaria
+
+** = chave estrangeira 
+
+
+
