@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Cadastrar Aluno</h1>
+<form method="post">
+    {% csrf_token %}
+    <div style="display: grid; gap: 1rem; max-width: 500px;">
+        <div>
+            <label>CPF:</label>
+            <input type="text" name="cpf" required maxlength="11">
+        </div>
+        <div>
+            <label>Nome:</label>
+            <input type="text" name="nome" required>
+        </div>
+        <div>
+            <label>Turma:</label>
+            <input type="text" name="turma" required>
+        </div>
+        <div>
+            <label>Semestre:</label>
+            <input type="number" name="semestre" min="1" max="10" required>
+        </div>
+        <button type="submit" class="btn">Cadastrar Aluno</button>
+    </div>
+</form>
+<a href="{% url 'lista_alunos' %}" class="btn">Voltar para Lista</a>
+{% endblock %}

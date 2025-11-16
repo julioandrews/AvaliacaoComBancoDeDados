@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="avaliacao-header">
+    <h1>Resultado da Avaliação</h1>
+    <p><strong>Aluno:</strong> {{ prova.aluno.nome }}</p>
+    <p><strong>Avaliação:</strong> {{ prova.avaliacao.descricao }}</p>
+    <p><strong>Disciplina:</strong> {{ prova.avaliacao.disciplina.nome }}</p>
+</div>
+
+<div class="card" style="text-align: center;">
+    <h2 style="color: #2c3e50; margin-bottom: 1rem;">Nota Final</h2>
+    <div style="font-size: 3rem; font-weight: bold; color: {% if prova.nota_final >= prova.avaliacao.valor_total|add:"-2" %}#27ae60{% else %}#e74c3c{% endif %};">
+        {{ prova.nota_final }}/{{ prova.avaliacao.valor_total }}
+    </div>
+    <p style="font-size: 1.2rem; color: #7f8c8d;">
+        {% widthratio prova.nota_final prova.avaliacao.valor_total 100 %}% de aproveitamento
+    </p>
+</div>
+
+<h3>Detalhes das Questões</h3>
+{% for resposta in respostas %}
+<div class="questao-avaliacao">
+    <div class="questao-header">
+        <h4>Questão {{ forloop.counter }}</h4>
+        <span class="questao-valor">{{ resposta.nota_questao }} pts</span>
+    </div>
+
+    <div class="card">
+        <p><strong>{{ resposta.questao.pergunta }}</strong></p>
+
+        <div class="form-group">
+            <label><strong>Sua Resposta:</strong></label>
+            <div style="background: #f8f9fa; padding: 1rem; border-radius: 6px;">
+                {{ resposta.resposta }}
+            </div>
+        </div>
+
+        {% if resposta.questao.tipo == 'OBJETIVA' %}
+            <div class="form-group">
+                <label><strong>Resposta Correta:</strong></label>
+                <div style="background: #e8f5e8; padding: 1rem; border-radius: 6px;">
+                    {{ resposta.questao.questaoobjetiva.resposta_certa }}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+
+<div style="text-align: center; margin: 2rem 0;">
+    <a href="{% url 'home' %}" class="btn">Voltar para Home</a>
+    <a href="{% url 'relatorio_aluno' prova.aluno.cpf %}" class="btn btn-secondary">Ver Relatório Completo</a>
+</div>
+{% endblock %}

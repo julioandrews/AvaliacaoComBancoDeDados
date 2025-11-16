@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Relatório do Aluno: {{ aluno.nome }}</h1>
+
+<div class="card">
+    <p><strong>CPF:</strong> {{ aluno.cpf }}</p>
+    <p><strong>Turma:</strong> {{ aluno.turma }}</p>
+    <p><strong>Semestre:</strong> {{ aluno.semestre }}</p>
+</div>
+
+<div class="grid grid-3">
+    <div class="card" style="text-align: center;">
+        <h3>Média Geral</h3>
+        <div style="font-size: 2rem; color: #3498db; font-weight: bold;">{{ media|floatformat:1 }}</div>
+    </div>
+    <div class="card" style="text-align: center;">
+        <h3>Melhor Nota</h3>
+        <div style="font-size: 2rem; color: #27ae60; font-weight: bold;">{{ melhor_nota|floatformat:1 }}</div>
+    </div>
+    <div class="card" style="text-align: center;">
+        <h3>Total de Provas</h3>
+        <div style="font-size: 2rem; color: #e74c3c; font-weight: bold;">{{ total_provas }}</div>
+    </div>
+</div>
+
+<h3>Provas Realizadas:</h3>
+{% for prova in provas %}
+<div class="card">
+    <p><strong>Avaliação:</strong> {{ prova.avaliacao.descricao }}</p>
+    <p><strong>Disciplina:</strong> {{ prova.avaliacao.disciplina.nome }}</p>
+    <p><strong>Nota:</strong> {{ prova.nota_final }}/{{ prova.avaliacao.valor_total }}</p>
+    <p><strong>Data:</strong> {{ prova.avaliacao.data }}</p>
+</div>
+{% empty %}
+<div class="card">
+    <p>Nenhuma prova realizada.</p>
+</div>
+{% endfor %}
+
+<a href="{% url 'lista_alunos' %}" class="btn">Voltar para Lista de Alunos</a>
+{% endblock %}

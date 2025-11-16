@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Lista de Questões</h1>
+<a href="{% url 'cadastrar_questao' %}" class="btn">Cadastrar Nova Questão</a>
+
+{% for questao in questoes %}
+<div class="card">
+    <h3>Questão {{ questao.cod }} ({{ questao.get_tipo_display }})</h3>
+    <p><strong>Pergunta:</strong> {{ questao.pergunta }}</p>
+    
+    {% if questao.tipo == 'OBJETIVA' %}
+        <p><strong>Resposta Correta:</strong> {{ questao.questaoobjetiva.resposta_certa }}</p>
+        <p><strong>Opções:</strong></p>
+        <ul>
+            {% for opcao in questao.opcao_set.all %}
+            <li>{{ opcao.letra }}) {{ opcao.opcao_texto }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p><strong>Resposta Esperada:</strong> {{ questao.questaodescritiva.resposta_esperada }}</p>
+    {% endif %}
+</div>
+{% empty %}
+<div class="card">
+    <p>Nenhuma questão cadastrada.</p>
+</div>
+{% endfor %}
+{% endblock %}

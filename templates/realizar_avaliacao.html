@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="avaliacao-header">
+    <h1>{{ avaliacao.descricao }}</h1>
+    <p><strong>Disciplina:</strong> {{ avaliacao.disciplina.nome }}</p>
+    <p><strong>Data:</strong> {{ avaliacao.data }} às {{ avaliacao.horario }}</p>
+    <p><strong>Valor Total:</strong> {{ avaliacao.valor_total }} pontos</p>
+</div>
+
+{% if erro %}
+<div class="alert alert-error">
+    {{ erro }}
+</div>
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+
+    <div class="card">
+        <h3>Identificação do Aluno</h3>
+        <div class="form-group">
+            <label>Selecione seu CPF:</label>
+            <select name="aluno_cpf" required>
+                <option value="">Selecione seu CPF...</option>
+                {% for aluno in alunos %}
+                <option value="{{ aluno.cpf }}">{{ aluno.nome }} - {{ aluno.cpf }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    {% for questao_usada in questoes %}
+    <div class="questao-avaliacao">
+        <div class="questao-header">
+            <h3>Questão {{ forloop.counter }}</h3>
+            <span class="questao-valor">{{ questao_usada.valor }} pts</span>
+        </div>
+
+        <div class="card">
+            <p><strong>{{ questao_usada.questao.pergunta }}</strong></p>
+
+            {% if questao_usada.questao.tipo == 'OBJETIVA' %}
+                <div class="opcoes-container">
+                    {% with opcoes=questao_usada.questao.opcao_set.all %}
+                    {% if opcoes %}
+                        {% for opcao in opcoes %}
+                        <div class="opcao-item">
+                            <label>
+                                <input type="radio" name="resposta_{{ questao_usada.questao.cod }}" value="{{ opcao.letra }}" required>
+                                <strong>{{ opcao.letra }})</strong> {{ opcao.opcao_texto }}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="alert alert-error">
+                            Opções não cadastradas para esta questão.
+                        </div>
+                    {% endif %}
+                    {% endwith %}
+                </div>
+            {% else %}
+                <div class="form-group">
+                    <label>Sua resposta:</label>
+                    <textarea name="resposta_{{ questao_usada.questao.cod }}" rows="6"
+                              placeholder="Digite sua resposta aqui..." required></textarea>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+
+    <div style="text-align: center; margin: 2rem 0;">
+        <button type="submit" class="btn btn-success" style="padding: 1rem 2rem; font-size: 1.1rem;">
+            Finalizar Avaliação
+        </button>
+    </div>
+</form>
+{% endblock %}

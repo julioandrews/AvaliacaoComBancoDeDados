@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Relatório da Disciplina: {{ disciplina.nome }}</h1>
+
+<div class="card">
+    <p><strong>Descrição:</strong> {{ disciplina.descricao }}</p>
+    <p><strong>Professor:</strong> {{ disciplina.professor.nome }}</p>
+</div>
+
+<h3>Desempenho nas Avaliações:</h3>
+{% for dado in dados_avaliacoes %}
+<div class="card">
+    <p><strong>Avaliação:</strong> {{ dado.avaliacao.descricao }}</p>
+    <p><strong>Média da Turma:</strong> {{ dado.media|floatformat:2 }}</p>
+    <p><strong>Melhor Nota:</strong> {{ dado.max|floatformat:2 }}</p>
+    <p><strong>Pior Nota:</strong> {{ dado.min|floatformat:2 }}</p>
+    <p><strong>Quantidade de Alunos:</strong> {{ dado.count }}</p>
+</div>
+{% empty %}
+<div class="card">
+    <p>Nenhuma avaliação realizada nesta disciplina.</p>
+</div>
+{% endfor %}
+
+<a href="{% url 'lista_disciplinas' %}" class="btn">Voltar para Lista de Disciplinas</a>
+{% endblock %}

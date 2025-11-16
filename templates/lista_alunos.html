@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Lista de Alunos</h1>
+<a href="{% url 'cadastrar_aluno' %}" class="btn">Cadastrar Novo Aluno</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>CPF</th>
+            <th>Nome</th>
+            <th>Turma</th>
+            <th>Semestre</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for aluno in alunos %}
+        <tr>
+            <td>{{ aluno.cpf }}</td>
+            <td>{{ aluno.nome }}</td>
+            <td>{{ aluno.turma }}</td>
+            <td>{{ aluno.semestre }}</td>
+            <td>
+                <a href="{% url 'relatorio_aluno' aluno.cpf %}" class="btn">Ver Relatório</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">Nenhum aluno cadastrado</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

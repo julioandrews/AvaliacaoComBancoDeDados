@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Cadastrar Disciplina</h1>
+<form method="post">
+    {% csrf_token %}
+    <div style="display: grid; gap: 1rem; max-width: 500px;">
+        <div>
+            <label>Nome:</label>
+            <input type="text" name="nome" required>
+        </div>
+        <div>
+            <label>Descrição:</label>
+            <textarea name="descricao" required></textarea>
+        </div>
+        <div>
+            <label>Professor:</label>
+            <select name="professor" required>
+                <option value="">Selecione um professor...</option>
+                {% for professor in professores %}
+                <option value="{{ professor.cpf }}">{{ professor.nome }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn">Cadastrar Disciplina</button>
+    </div>
+</form>
+<a href="{% url 'lista_disciplinas' %}" class="btn">Voltar para Lista</a>
+{% endblock %}

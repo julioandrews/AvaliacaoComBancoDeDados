@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Cadastrar Avaliação</h1>
+<form method="post">
+    {% csrf_token %}
+    <div style="display: grid; gap: 1rem; max-width: 500px;">
+        <div>
+            <label>Descrição:</label>
+            <input type="text" name="descricao" required>
+        </div>
+        <div>
+            <label>Data:</label>
+            <input type="date" name="data" required>
+        </div>
+        <div>
+            <label>Horário:</label>
+            <input type="time" name="horario" required>
+        </div>
+        <div>
+            <label>Valor Total:</label>
+            <input type="number" name="valor_total" required>
+        </div>
+        <div>
+            <label>Professor:</label>
+            <select name="professor" required>
+                <option value="">Selecione...</option>
+                {% for professor in professores %}
+                <option value="{{ professor.cpf }}">{{ professor.nome }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label>Disciplina:</label>
+            <select name="disciplina" required>
+                <option value="">Selecione...</option>
+                {% for disciplina in disciplinas %}
+                <option value="{{ disciplina.cod }}">{{ disciplina.nome }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <h3>Questões da Avaliação</h3>
+    <div style="max-height: 300px; overflow-y: auto;">
+        {% for questao in questoes %}
+        <div class="card">
+            <label>
+                <input type="checkbox" name="questoes" value="{{ questao.cod }}">
+                <strong>Questão {{ questao.cod }} ({{ questao.tipo }})</strong><br>
+                {{ questao.pergunta }}
+            </label>
+            <div>
+                <label>Valor desta questão:</label>
+                <input type="number" name="valor_{{ questao.cod }}" min="1" value="1">
+            </div>
+        </div>
+        {% empty %}
+        <p>Nenhuma questão cadastrada. <a href="{% url 'cadastrar_questao' %}">Cadastre questões primeiro</a></p>
+        {% endfor %}
+    </div>
+
+    <button type="submit" class="btn">Cadastrar Avaliação</button>
+</form>
+<a href="{% url 'lista_avaliacoes' %}" class="btn">Voltar para Lista</a>
+{% endblock %}

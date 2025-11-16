@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Cadastrar Questão</h1>
+<form method="post">
+    {% csrf_token %}
+    <div style="display: grid; gap: 1rem; max-width: 500px;">
+        <div>
+            <label>Tipo:</label>
+            <select name="tipo" id="tipoQuestao" required>
+                <option value="">Selecione...</option>
+                <option value="OBJETIVA">Objetiva</option>
+                <option value="DESCRITIVA">Descritiva</option>
+            </select>
+        </div>
+        <div>
+            <label>Pergunta:</label>
+            <textarea name="pergunta" rows="3" required></textarea>
+        </div>
+        
+        <!-- Campos para questão objetiva -->
+        <div id="camposObjetiva" style="display: none;">
+            <div>
+                <label>Resposta Correta:</label>
+                <select name="resposta_certa">
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                </select>
+            </div>
+            <div>
+                <label>Opções:</label>
+                <input type="text" name="opcao_A" placeholder="Opção A">
+                <input type="text" name="opcao_B" placeholder="Opção B">
+                <input type="text" name="opcao_C" placeholder="Opção C">
+                <input type="text" name="opcao_D" placeholder="Opção D">
+            </div>
+        </div>
+        
+        <!-- Campos para questão descritiva -->
+        <div id="camposDescritiva" style="display: none;">
+            <div>
+                <label>Resposta Esperada:</label>
+                <textarea name="resposta_esperada" rows="3"></textarea>
+            </div>
+        </div>
+        
+        <button type="submit" class="btn">Cadastrar Questão</button>
+    </div>
+</form>
+
+<script>
+document.getElementById('tipoQuestao').addEventListener('change', function() {
+    var tipo = this.value;
+    document.getElementById('camposObjetiva').style.display = tipo === 'OBJETIVA' ? 'block' : 'none';
+    document.getElementById('camposDescritiva').style.display = tipo === 'DESCRITIVA' ? 'block' : 'none';
+});
+</script>
+
+<a href="{% url 'lista_questoes' %}" class="btn">Voltar para Lista</a>
+{% endblock %}

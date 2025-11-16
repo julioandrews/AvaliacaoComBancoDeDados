@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <h1>Sistema de Gestão de Avaliações</h1>
+    <p>Bem-vindo ao sistema completo de gerenciamento de avaliações acadêmicas.</p>
+</div>
+
+<div class="grid grid-3">
+    <div class="card">
+        <h3>Alunos</h3>
+        <p>Gerencie o cadastro e acompanhe o desempenho dos alunos.</p>
+        <a href="{% url 'cadastrar_aluno' %}" class="btn">Cadastrar Aluno</a>
+        <a href="{% url 'lista_alunos' %}" class="btn btn-secondary">Ver Alunos</a>
+    </div>
+
+    <div class="card">
+        <h3>Professores</h3>
+        <p>Cadastre professores e atribua disciplinas.</p>
+        <a href="{% url 'cadastrar_professor' %}" class="btn">Cadastrar Professor</a>
+        <a href="{% url 'lista_professores' %}" class="btn btn-secondary">Ver Professores</a>
+    </div>
+
+    <div class="card">
+        <h3>Disciplinas</h3>
+        <p>Gerencie as disciplinas oferecidas.</p>
+        <a href="{% url 'cadastrar_disciplina' %}" class="btn">Cadastrar Disciplina</a>
+        <a href="{% url 'lista_disciplinas' %}" class="btn btn-secondary">Ver Disciplinas</a>
+    </div>
+
+    <div class="card">
+        <h3>Questões</h3>
+        <p>Crie banco de questões para as avaliações.</p>
+        <a href="{% url 'cadastrar_questao' %}" class="btn">Cadastrar Questão</a>
+        <a href="{% url 'lista_questoes' %}" class="btn btn-secondary">Ver Questões</a>
+    </div>
+
+    <div class="card">
+        <h3>Avaliações</h3>
+        <p>Crie e gerencie avaliações.</p>
+        <a href="{% url 'cadastrar_avaliacao' %}" class="btn">Cadastrar Avaliação</a>
+        <a href="{% url 'lista_avaliacoes' %}" class="btn btn-secondary">Ver Avaliações</a>
+    </div>
+
+    <div class="card">
+        <h3>Relatórios</h3>
+        <p>Acompanhe estatísticas e desempenhos.</p>
+        <a href="{% url 'relatorio_geral' %}" class="btn">Relatório Geral</a>
+    </div>
+</div>
+
+<div class="card">
+    <h3>Status do Sistema</h3>
+    <div class="grid grid-3">
+        <div>
+            <h4>Alunos Cadastrados</h4>
+            <p style="font-size: 2rem; color: #3498db; margin: 0;">{{ total_alunos|default:"0" }}</p>
+        </div>
+        <div>
+            <h4>Professores</h4>
+            <p style="font-size: 2rem; color: #e74c3c; margin: 0;">{{ total_professores|default:"0" }}</p>
+        </div>
+        <div>
+            <h4>Avaliações</h4>
+            <p style="font-size: 2rem; color: #27ae60; margin: 0;">{{ total_avaliacoes|default:"0" }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

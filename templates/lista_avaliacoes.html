@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Lista de Avaliações</h1>
+<a href="{% url 'cadastrar_avaliacao' %}" class="btn">Cadastrar Nova Avaliação</a>
+
+{% for avaliacao in avaliacoes %}
+<div class="card">
+    <h3>Avaliação {{ avaliacao.cod }}: {{ avaliacao.descricao }}</h3>
+    <p><strong>Data:</strong> {{ avaliacao.data }} às {{ avaliacao.horario }}</p>
+    <p><strong>Valor Total:</strong> {{ avaliacao.valor_total }} pontos</p>
+    <p><strong>Professor:</strong> {{ avaliacao.professor.nome }}</p>
+    <p><strong>Disciplina:</strong> {{ avaliacao.disciplina.nome }}</p>
+    
+    <a href="{% url 'realizar_avaliacao' avaliacao.cod %}" class="btn">Realizar esta Avaliação</a>
+</div>
+{% empty %}
+<div class="card">
+    <p>Nenhuma avaliação cadastrada.</p>
+</div>
+{% endfor %}
+{% endblock %}

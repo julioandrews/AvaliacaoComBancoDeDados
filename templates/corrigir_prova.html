@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="avaliacao-header">
+    <h1>Correção de Prova</h1>
+    <p><strong>Aluno:</strong> {{ prova.aluno.nome }} ({{ prova.aluno.cpf }})</p>
+    <p><strong>Avaliação:</strong> {{ prova.avaliacao.descricao }}</p>
+    <p><strong>Disciplina:</strong> {{ prova.avaliacao.disciplina.nome }}</p>
+</div>
+
+<form method="post">
+    {% csrf_token %}
+
+    {% for questao_usada in questoes_usadas %}
+    <div class="questao-avaliacao">
+        <div class="questao-header">
+            <h3>Questão {{ forloop.counter }}</h3>
+            <span class="questao-valor">{{ questao_usada.valor }} pts</span>
+        </div>
+
+        <div class="card">
+            <p><strong>{{ questao_usada.questao.pergunta }}</strong></p>
+
+            {% with resposta=respostas|dictsort:"questao.cod"|slice:forloop.counter0|first %}
+            <div class="form-group">
+                <label><strong>Resposta do Aluno:</strong></label>
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 6px; margin: 0.5rem 0;">
+                    {{ resposta.resposta }}
+                </div>
+            </div>
+
+            {% if questao_usada.questao.tipo == 'OBJETIVA' %}
+                <div class="form-group">
+                    <label><strong>Correção Automática:</strong></label>
+                    <div style="background: #e8f5e8; padding: 1rem; border-radius: 6px;">
+                        {% with questao_obj=questao_usada.questao.questaoobjetiva %}
+                        {% if questao_obj %}
+                            <p><strong>Resposta Correta:</strong> {{ questao_obj.resposta_certa }}</p>
+                            <p><strong>Resposta do Aluno:</strong> {{ resposta.resposta|upper }}</p>
+                            <p><strong>Status:</strong>
+                                <span style="color: {% if resposta.resposta|upper == questao_obj.resposta_certa %}#27ae60{% else %}#e74c3c{% endif %}; font-weight: bold;">
+                                    {% if resposta.resposta|upper == questao_obj.resposta_certa %}CORRETA{% else %}INCORRETA{% endif %}
+                                </span>
+                            </p>
+                            <p><strong>Nota Atribuída:</strong> 
+                                {% if resposta.resposta|upper == questao_obj.resposta_certa %}
+                                    {{ questao_usada.valor }} pontos
+                                {% else %}
+                                    0 pontos
+                                {% endif %}
+                            </p>
+                        {% else %}
+                            <div class="alert alert-error">Questão objetiva não configurada corretamente.</div>
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="form-group">
+                    <label><strong>Resposta Esperada:</strong></label>
+                    <div style="background: #e3f2fd; padding: 1rem; border-radius: 6px; margin: 0.5rem 0;">
+                        {{ questao_usada.questao.questaodescritiva.resposta_esperada }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><strong>Atribuir Nota (máximo: {{ questao_usada.valor }} pontos):</strong></label>
+                    <input type="number" name="nota_{{ questao_usada.questao.cod }}"
+                           value="{{ resposta.nota_questao|default:0 }}"
+                           min="0" max="{{ questao_usada.valor }}" step="0.5" required>
+                </div>
+            {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+    {% endfor %}
+
+    <div style="text-align: center; margin: 2rem 0;">
+        <button type="submit" class="btn btn-success" style="padding: 1rem 2rem; font-size: 1.1rem;">
+            Salvar Correção
+        </button>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Lista de Professores</h1>
+<a href="{% url 'cadastrar_professor' %}" class="btn">Cadastrar Novo Professor</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>CPF</th>
+            <th>Nome</th>
+            <th>Data Nasc.</th>
+            <th>Salário</th>
+            <th>Idade</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for professor in professores %}
+        <tr>
+            <td>{{ professor.cpf }}</td>
+            <td>{{ professor.nome }}</td>
+            <td>{{ professor.data_nasc|default:"-" }}</td>
+            <td>R$ {{ professor.salario }}</td>
+            <td>{{ professor.idade }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">Nenhum professor cadastrado</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

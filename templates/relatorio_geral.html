@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <h1>Relatório Geral do Sistema</h1>
+</div>
+
+<div class="grid grid-3">
+    <div class="card" style="text-align: center;">
+        <h3>Alunos</h3>
+        <div style="font-size: 2.5rem; color: #3498db; font-weight: bold;">{{ total_alunos }}</div>
+    </div>
+
+    <div class="card" style="text-align: center;">
+        <h3>Professores</h3>
+        <div style="font-size: 2.5rem; color: #e74c3c; font-weight: bold;">{{ total_professores }}</div>
+    </div>
+
+    <div class="card" style="text-align: center;">
+        <h3>Disciplinas</h3>
+        <div style="font-size: 2.5rem; color: #9b59b6; font-weight: bold;">{{ total_disciplinas }}</div>
+    </div>
+
+    <div class="card" style="text-align: center;">
+        <h3>Avaliações</h3>
+        <div style="font-size: 2.5rem; color: #27ae60; font-weight: bold;">{{ total_avaliacoes }}</div>
+    </div>
+</div>
+
+<div class="grid grid-2">
+    <div class="card">
+        <h3>Top 5 Alunos</h3>
+        {% if top_alunos %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Aluno</th>
+                    <th>Média</th>
+                    <th>Provas</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for aluno in top_alunos %}
+                <tr>
+                    <td>{{ aluno.aluno__nome }}</td>
+                    <td><strong>{{ aluno.media|floatformat:1 }}</strong></td>
+                    <td>{{ aluno.total_provas }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>Nenhuma prova realizada ainda.</p>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <h3>Desempenho por Disciplina</h3>
+        {% if disciplinas_desempenho %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Disciplina</th>
+                    <th>Média Geral</th>
+                    <th>Avaliações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for disc in disciplinas_desempenho %}
+                <tr>
+                    <td>{{ disc.disciplina__nome }}</td>
+                    <td><strong>{{ disc.media_geral|floatformat:1 }}</strong></td>
+                    <td>{{ disc.total_avaliacoes }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>Nenhum dado de desempenho disponível.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <h3>Ações Rápidas</h3>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="{% url 'lista_alunos' %}" class="btn">Ver Todos Alunos</a>
+        <a href="{% url 'lista_avaliacoes' %}" class="btn">Ver Avaliações</a>
+        <a href="{% url 'cadastrar_avaliacao' %}" class="btn btn-success">Nova Avaliação</a>
+    </div>
+</div>
+{% endblock %}
