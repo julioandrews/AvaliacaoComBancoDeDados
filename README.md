@@ -26,18 +26,18 @@ O diagrama ER ilustra as entidades principais (Professor, Aluno, Disciplina, Ava
 
 <h3>Modelo Lógico</h3>
 
-    Professor = {*CPF, nome, data nasc., salário, idade}
-    Avaliação = {*CÓD, descrição, data, horário, valor, **P_CPF}
-    Prova_Feita = {*CÓD, *CPF, nota_final}
-    Aluno = {*CPF, nome, turma, semestre}
-    disciplina = {*CÓD, **P_CPF, Nome, Descrição}
-    Questão = {*Q_CÓD, tipo, pergunta}
-    Q_Descritiva = {*Q_CÓD, resposta esperada}
-    Q_Objetiva = {*Q_CÓD, resposta certa}
-    Opções = {*Q_CÓD, *opcão}
-    Questões_usadas = {*A_CÓD, *Q_CÓD, valor/questão}
-    Aluno_cursa_Disc = {*CÓD,*CPF}
-    Resposta_Dada = {*CPF_Aluno,*COD_avaliação, *COD_questão, resposta, nota_final}
+	Professor(CPF*, nome, data_nasc, salario, idade)	
+	Aluno(CPF*, nome, turma, semestre)  
+	Disciplina(COD*, nome, descricao, CPF_Professor**)
+	Avaliacao(COD*, descricao, data, horario, valor_total, COD_Disciplina**)
+	Questao(COD*, tipo, pergunta)
+	Q_Objetiva(COD**, resposta_certa)
+	Q_Descritiva(COD**, resposta_esperada) 
+	Opcao(COD_Questao**, letra*, opcao_texto)
+	Questao_Usada(COD_Avaliacao**, COD_Questao**, valor)
+	Aluno_Cursa_Disciplina(CPF_Aluno**, COD_Disciplina**)
+	Prova_Feita(CPF_Aluno**, COD_Avaliacao**, nota_final)
+	Resposta_Dada(CPF_Aluno**, COD_Avaliacao**, COD_Questao**, resposta, nota_questao)
     
     * = chave primaria
     ** = chave estrangeira 
