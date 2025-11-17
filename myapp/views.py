@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.db.models import Avg, Count, Max, Min
+from django.db import connection
 from .models import *
 
 def home(request):
@@ -24,7 +25,9 @@ def cadastrar_aluno(request):
         nome = request.POST['nome']
         turma = request.POST['turma']
         semestre = request.POST['semestre']
-        
+        with connection.cursor() as cursor:
+            cursor.execute("""INSERT INTO aluno (cpf, nome, turma, semestre) VALUES (%s,%s,%s,%s)""", [cpf, nome, turma, semestre])
+        cursor.close()
         Aluno.objects.create(
             cpf=cpf, nome=nome, turma=turma, semestre=semestre
         )
@@ -34,6 +37,13 @@ def cadastrar_aluno(request):
 
 def cadastrar_professor(request):
     if request.method == 'POST':
+        cpf=request.POST['cpf']
+        nome=request.POST['nome']
+        data_nasc=request.POST['data_nasc']
+        salario=request.POST['salario']        
+        idade=request.POST['idade']
+        with connection.cursor() as cursor:
+            cursor.execute("""INSERT INTO professor (cpf, nome, data_nasc, salario, idade) VALUES (%s,%s,%s,%s,%s)""", [cpf, nome, data_nasc, salario, idade])
         Professor.objects.create(
             cpf=request.POST['cpf'],
             nome=request.POST['nome'],
@@ -47,24 +57,37 @@ def cadastrar_professor(request):
 
 def cadastrar_disciplina(request):
     if request.method == 'POST':
+        nome=request.POST['nome']
+        descricao=request.POST['descricao']
+        professor_cpf=request.POST['professor']
+        with connection.cursor() as cursor:
+            cursor.execute("""INSERT INTO disciplina (cpf, nome, descricao) VALUES (%s,%s,%s)""", [professor_cpf, nome, descricao])
         Disciplina.objects.create(
             nome=request.POST['nome'],
             descricao=request.POST['descricao'],
-            professor_id=request.POST['professor']
+            professor_cpf=request.POST['professor']
         )
         return redirect('lista_disciplinas')
-    
-    professores = Professor.objects.all()
+    with connection.cursor() as cursor2:
+        cursor2.execute("SELECT * FROM professor")
+        professores = cursor2.fetchall()
     return render(request, 'cadastrar_disciplina.html', {'professores': professores})
 
 def cadastrar_questao(request):
     if request.method == 'POST':
         tipo = request.POST['tipo']
         pergunta = request.POST['pergunta']
-        
+
+        with connection.cursor() as cursor:
+            cursor.execute("""INSERT INTO questao (tipo, pergunta) VALUES (%s,%s)""", [tipo, pergunta])
+
         questao = Questao.objects.create(tipo=tipo, pergunta=pergunta)
-        
         if tipo == 'OBJETIVA':
+
+            with connection.cursor() as cursor2:
+                resposta_certa=request.POST['resposta_certa']
+                cursor2.execute("""INSERT INTO q_objetiva (tipo, pergunta, resposta_certa) VALUES (%s,%s,%s)""", [tipo, pergunta, resposta_certa])
+
             QuestaoObjetiva.objects.create(
                 questao_ptr=questao,
                 resposta_certa=request.POST['resposta_certa']
@@ -73,12 +96,20 @@ def cadastrar_questao(request):
             for letra in ['A', 'B', 'C', 'D']:
                 opcao_texto = request.POST.get(f'opcao_{letra}')
                 if opcao_texto:
+                    with connection.cursor() as cursor3:
+                        cursor3.execute("SELECT* FROM questao")
+                        numero = cursor3.fetchall()
+                        cod = len(numero)
+                        cursor3.execute("""INSERT INTO opcoes (cod, opcao, letra) VALUES (%s,%s,%s)""", [cod, opcao_texto, letra])
                     Opcao.objects.create(
                         questao=questao,
                         letra=letra,
                         opcao_texto=opcao_texto
                     )
         else:
+            resposta_esperada=request.POST['resposta_esperada']
+            with connection.cursor() as cursor4:
+                cursor4.execute("""INSERT INTO q_descritiva (tipo, pergunta, resposta_esperada) VALUES (%s,%s,%s)""", [tipo, pergunta, resposta_esperada])
             QuestaoDescritiva.objects.create(
                 questao_ptr=questao,
                 resposta_esperada=request.POST['resposta_esperada']
@@ -90,6 +121,15 @@ def cadastrar_questao(request):
 
 def cadastrar_avaliacao(request):
     if request.method == 'POST':
+        descricao=request.POST['descricao']
+        data=request.POST['data']
+        horario=request.POST['horario']
+        valor_total=request.POST['valor_total']
+        professor_cpf=request.POST['professor']
+        disciplina_cod=request.POST['disciplina']
+        with connection.cursor() as cursor:
+            cursor.execute("INSERT INTO avaliacao (descricao, data, horario, valor_total, professor_cpf, disciplina_cod) VALUES (%s,%s,%s,%s,%s,%s)",
+                           [descricao, data, horario, valor_total, professor_cpf, disciplina_cod])
         avaliacao = Avaliacao.objects.create(
             descricao=request.POST['descricao'],
             data=request.POST['data'],
@@ -103,6 +143,8 @@ def cadastrar_avaliacao(request):
         questao_ids = request.POST.getlist('questoes')
         for questao_id in questao_ids:
             valor = request.POST.get(f'valor_{questao_id}', 1)
+            with connection.cursor() as cursor2:
+                cursor2.execute("INSERT INTO questoes_usadas (a_cod, q_cod, valor) VALUES (%s, %s, %s)", [avaliacao, questao_id, valor])
             QuestaoUsada.objects.create(
                 avaliacao=avaliacao,
                 questao_id=questao_id,
@@ -122,23 +164,23 @@ def cadastrar_avaliacao(request):
 
 # LISTAS
 def lista_alunos(request):
-    alunos = Aluno.objects.all()
+    alunos = Aluno.objects.raw("SELECT * FROM myapp_aluno")
     return render(request, 'lista_alunos.html', {'alunos': alunos})
 
 def lista_professores(request):
-    professores = Professor.objects.all()
+    professores = Professor.objects.raw("SELECT * FROM myapp_professor")
     return render(request, 'lista_professores.html', {'professores': professores})
 
 def lista_disciplinas(request):
-    disciplinas = Disciplina.objects.all()
+    disciplinas = Disciplina.objects.raw("SELECT * FROM myapp_disciplina")
     return render(request, 'lista_disciplinas.html', {'disciplinas': disciplinas})
 
 def lista_questoes(request):
-    questões = Questao.objects.all()
+    questões = Questao.objects.raw("SELECT * FROM myapp_questao")
     return render(request, 'lista_questoes.html', {'questoes': questões})
 
 def lista_avaliacoes(request):
-    avaliacoes = Avaliacao.objects.all()
+    avaliacoes = Avaliacao.objects.raw("SELECT * FROM myapp_questao")
     return render(request, 'lista_avaliacoes.html', {'avaliacoes': avaliacoes})
 
 # REALIZAR AVALIAÇÃO - MELHORADA
