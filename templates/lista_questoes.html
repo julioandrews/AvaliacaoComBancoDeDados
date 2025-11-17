@@ -6,19 +6,19 @@
 
 {% for questao in questoes %}
 <div class="card">
-    <h3>Questão {{ questao.cod }} ({{ questao.get_tipo_display }})</h3>
+    <h3>Questão {{ questao.cod }} ({{ questao.tipo }})</h3>
     <p><strong>Pergunta:</strong> {{ questao.pergunta }}</p>
     
     {% if questao.tipo == 'OBJETIVA' %}
-        <p><strong>Resposta Correta:</strong> {{ questao.questaoobjetiva.resposta_certa }}</p>
+        <p><strong>Resposta Correta:</strong> {{ questao.resposta_correta}}</p>
         <p><strong>Opções:</strong></p>
         <ul>
-            {% for opcao in questao.opcao_set.all %}
+            {% for opcao in opcoes %}
             <li>{{ opcao.letra }}) {{ opcao.opcao_texto }}</li>
             {% endfor %}
         </ul>
     {% else %}
-        <p><strong>Resposta Esperada:</strong> {{ questao.questaodescritiva.resposta_esperada }}</p>
+        <p><strong>Resposta Esperada:</strong> {{ questao.resposta_esperada }}</p>
     {% endif %}
 </div>
 {% empty %}

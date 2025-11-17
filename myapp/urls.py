@@ -19,12 +19,12 @@ urlpatterns = [
     path('avaliacoes/', views.lista_avaliacoes, name='lista_avaliacoes'),
     
     # Avaliações
-    path('avaliacao/<int:avaliacao_id>/realizar/', views.realizar_avaliacao, name='realizar_avaliacao'),
-    path('prova/<int:prova_id>/corrigir/', views.corrigir_prova, name='corrigir_prova'),
-    path('resultado/<int:prova_id>/', views.resultado_avaliacao, name='resultado_avaliacao'),
+   #path('avaliacao/<int:avaliacao_id>/realizar/', views.realizar_avaliacao, name='realizar_avaliacao'),
+   #path('prova/<int:prova_id>/corrigir/', views.corrigir_prova, name='corrigir_prova'),
+   #path('resultado/<int:prova_id>/', views.resultado_avaliacao, name='resultado_avaliacao'),
     
     # Relatórios
-    path('relatorio/aluno/<str:aluno_cpf>/', views.relatorio_aluno, name='relatorio_aluno'),
-    path('relatorio/disciplina/<int:disciplina_id>/', views.relatorio_disciplina, name='relatorio_disciplina'),
-    path('relatorio/geral/', views.relatorio_geral, name='relatorio_geral'),
+   #path('relatorio/aluno/<str:aluno_cpf>/', views.relatorio_aluno, name='relatorio_aluno'),
+   #path('relatorio/disciplina/<int:disciplina_id>/', views.relatorio_disciplina, name='relatorio_disciplina'),
+   #path('relatorio/geral/', views.relatorio_geral, name='relatorio_geral'),
 ]

@@ -10,7 +10,7 @@
             <th>Código</th>
             <th>Nome</th>
             <th>Descrição</th>
-            <th>Professor</th>
+            <th>Professor (CPF)</th>
         </tr>
     </thead>
     <tbody>
@@ -19,7 +19,7 @@
             <td>{{ disciplina.cod }}</td>
             <td>{{ disciplina.nome }}</td>
             <td>{{ disciplina.descricao }}</td>
-            <td>{{ disciplina.professor.nome }}</td>
+            <td>{{ disciplina.p_cpf }}</td>
         </tr>
         {% empty %}
         <tr>
